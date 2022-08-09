@@ -14,7 +14,6 @@ NOW = datetime.datetime.now()
 
 dotenv_path = join(dirname(__file__), '.env')  # Path to .env file
 load_dotenv(dotenv_path)
-print("load_dotenv(dotenv_path)", load_dotenv(dotenv_path))
 
 
 def read_secret(secret_name):
@@ -35,6 +34,13 @@ class Config(object):
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+
+    MAIL_SERVER = "smtp.gmail.com"
+    MAIL_PORT = 465  # 587 : 이거는 장고
+    MAIL_USERNAME = "khandure05@gmail.com"
+    MAIL_PASSWORD = "ptafejajahqhgcbo"
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
 
 
 class DevelopmentConfig(Config):

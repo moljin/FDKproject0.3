@@ -24,7 +24,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -171,4 +170,4 @@ cython_debug/
 # 추가
 .idea/
 migrations/
-static/media/
+flask_www/static/media/
