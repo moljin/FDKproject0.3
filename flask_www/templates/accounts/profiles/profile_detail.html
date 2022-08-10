@@ -22,6 +22,12 @@
     <div>{{ profile.message }}</div>
 
     {% if current_user.is_authenticated and current_user.id==profile.user_id %}
-        <div>{{ profile.nickname }} <a href="{{ url_for('profiles.vendor_update', _id=profile.id) }}">vendor 신청하기</a></div>
+        <div>{{ profile.nickname }} <a href="{{ url_for('profiles.vendor_update', _id=profile.id) }}">
+            {% if profile.level == '일반이용자' %}
+                vendor 신청하기
+            {% else %}
+                vendor profile 수정하기
+            {% endif %}
+        </a></div>
     {% endif %}
 {% endblock %}

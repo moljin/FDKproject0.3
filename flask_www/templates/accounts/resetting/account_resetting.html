@@ -36,8 +36,8 @@
                 </form>
                 <script src="{{ url_for('static', filename='statics/js/accounts/userDelete.js') }}"></script>
         {% else %}
-            <p><a href="#">비밀번호 재설정(비로그인상태:비밀번호를 잊으셨나요?)</a>
-{#                <p><a href="{{ url_for('accounts.forget_password_email') }}">비밀번호 재설정(비로그인상태:비밀번호를 잊으셨나요?)</a>#}
+{#            <p><a href="#">비밀번호 재설정(비로그인상태:비밀번호를 잊으셨나요?)</a>#}
+                <p><a href="{{ url_for('accounts.forget_password_email') }}">비밀번호 재설정(비로그인상태:비밀번호를 잊으셨나요?)</a>
             </p>
         {% endif %}
         <hr>
@@ -48,14 +48,21 @@
                     <a href="{{ url_for('profiles.create') }}">create_profile</a>
                 </p>
             {% else %}
-                <a href="{{ url_for('profiles.detail', _id=profile.id) }}">나 {{ profile.nickname }}의
-                    프로필 보기</a>
-            {% endif %}
-        {% endif %}
+                {% if profile.level == '일반이용자' %}
+                    <a href="{{ url_for('profiles.detail', _id=profile.id) }}">나 {{ profile.nickname }}의 프로필 보기</a>
+                {% else %}
+                    <a href="{{ url_for('profiles.vendor_detail', _id=profile.id) }}">나 {{ profile.nickname }}의 프로필 보기</a>
+                {% endif %}
 
-        {% if current_user.is_authenticated and current_user.id==profile.user_id %}
-            <div>{{ profile.nickname }} <a href="#">vendor 신청하기</a></div>
-{#                <div>{{ profile.nickname }} <a href="{{ url_for('profiles.vendor_update', pk_id=profile.id) }}">vendor 신청하기</a></div>#}
+                <div>{{ profile.level }}</div>
+                <div>{{ profile.nickname }} <a href="{{ url_for('profiles.vendor_update', _id=profile.id) }}">
+                    {% if profile.level == '일반이용자' %}
+                        vendor 신청하기
+                    {% else %}
+                        vendor profile 수정하기
+                    {% endif %}
+                </a></div>
+            {% endif %}
         {% endif %}
 {% endblock %}
 

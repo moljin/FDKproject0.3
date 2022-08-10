@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from flask import Blueprint, g, redirect, url_for, render_template, request, abort
 from flask_login import current_user
@@ -9,7 +10,7 @@ from flask_www.accounts.utils import login_required, send_mail_for_any
 from flask_www.commons.ownership_required import profile_ownership_required
 from flask_www.commons.utils import save_file
 from flask_www.configs import db
-from flask_www.configs.config import NOW
+from flask_www.configs.config import NOW, BASE_DIR
 
 NAME = 'profiles'
 profiles_bp = Blueprint(NAME, __name__, url_prefix='/accounts')
@@ -36,7 +37,7 @@ def create():
             print(new_profile.image_path)
         db.session.add(new_profile)
         db.session.commit()
-        return redirect(url_for('profiles.profile_detail', _id=new_profile.id))
+        return redirect(url_for('profiles.detail', _id=new_profile.id))
     # else:
     #     flash('이미 등록한 닉네임이 있습니다.')
     return render_template('accounts/profiles/profile_create.html', form=form)
@@ -50,7 +51,7 @@ def detail(_id):
     return render_template('accounts/profiles/profile_detail.html', profile_user=user_obj, profile=profile_obj)
 
 
-@profiles_bp.route('/vendor/not', methods=['GET', 'POST'])
+@profiles_bp.route('/profile/vendor/not', methods=['GET', 'POST'])
 @login_required
 def vendor_not():
     _id = current_user.id
@@ -64,7 +65,6 @@ def vendor_not():
 def update(_id):
     form = ProfileForm(request.form)
     profile = db.session.query(Profile).filter_by(id=_id).one()
-    print(profile.image_path)
     if request.method == 'POST':
         if profile:
             profile.nickname = form.nickname.data
@@ -72,24 +72,20 @@ def update(_id):
             # profile_image = form.data.get('profile_image')
             profile_image = request.files.get('profile_image')
             if profile_image:
-                try:
-                    # os.remove(profile.image_path)
-                    os.unlink(profile.image_path)
-                    print("os")
-                    relative_path, _ = save_file(NOW, profile_image)
-                    profile.image_path = relative_path
-                    print("os.unlink")
-                except Exception as e:
-                    print("except", e)
-                    # relative_path, _ = save_file(NOW, profile_image)
-                    # profile.image_path = relative_path
-            db.session.add(profile)
-            db.session.commit()
+                profile_image_relative_path, profile_image_upload_path = save_file(NOW, profile_image)
+                if profile.image_path:
+                    profile_image_origin_path = os.path.join(BASE_DIR, profile.image_path)
+                    if profile_image_origin_path != profile_image_upload_path:
+                        if os.path.isfile(profile_image_origin_path):
+                            shutil.rmtree(os.path.dirname(profile_image_origin_path))
+                profile.image_path = profile_image_relative_path
+                db.session.add(profile)
+                db.session.commit()
             return redirect(url_for('profiles.detail', _id=_id))
     return render_template('accounts/profiles/profile_update.html', form=form, getprofile=profile)
 
 
-@profiles_bp.route('vendor/detail/<int:_id>', methods=['GET'])
+@profiles_bp.route('profile/vendor/detail/<int:_id>', methods=['GET'])
 @login_required
 def vendor_detail(_id):
     # board = TestBoard.query.get_or_404(_id)
@@ -99,7 +95,7 @@ def vendor_detail(_id):
     return render_template('accounts/profiles/vendor_detail.html', profile_user=user_obj, profile=profile_obj)
 
 
-@profiles_bp.route('vendor/update/<int:_id>', methods=['GET', 'POST'])
+@profiles_bp.route('profile/vendor/update/<int:_id>', methods=['GET', 'POST'])
 @profile_ownership_required
 def vendor_update(_id):
     form = VendorForm(request.form)
@@ -115,28 +111,26 @@ def vendor_update(_id):
             # profile_image = form.data.get('profile_image')
             profile_image = request.files.get('profile_image')
             if profile_image:
-                try:
-                    os.unlink(profile.image_path)
-                    relative_path, _ = save_file(NOW, profile_image)
-                    profile.image_path = relative_path
-                except Exception as e:
-                    print("except", e)
-                    relative_path, _ = save_file(NOW, profile_image)
-                    profile.image_path = relative_path
+                profile_image_relative_path, profile_image_upload_path = save_file(NOW, profile_image)
+                if profile.image_path:
+                    profile_image_origin_path = os.path.join(BASE_DIR, profile.image_path)
+                    if profile_image_origin_path != profile_image_upload_path:
+                        if os.path.isfile(profile_image_origin_path):
+                            shutil.rmtree(os.path.dirname(profile_image_origin_path))
+                profile.image_path = profile_image_relative_path
 
             profile.corp_email = form.corp_email.data
             profile.corp_number = form.corp_number.data
 
             corp_image = request.files.get('corp_image')
             if corp_image:
-                try:
-                    os.unlink(profile.corp_image)
-                    relative_path, _ = save_file(NOW, corp_image)
-                    profile.corp_image = relative_path
-                except Exception as e:
-                    print("except", e)
-                    relative_path, _ = save_file(NOW, corp_image)
-                    profile.corp_image = relative_path
+                corp_image_relative_path, corp_image_upload_path = save_file(NOW, corp_image)
+                if profile.corp_image_path:
+                    corp_image_origin_path = os.path.join(BASE_DIR, profile.corp_image_path)
+                    if corp_image_origin_path != corp_image_upload_path:
+                        if os.path.isfile(corp_image_origin_path):
+                            shutil.rmtree(os.path.dirname(corp_image_origin_path))
+                profile.corp_image_path = corp_image_relative_path
 
             profile.corp_address = form.corp_address.data
             profile.main_phonenumber = form.main_phonenumber.data

@@ -37,7 +37,7 @@ class Profile(BaseModel):
 
     corp_email = db.Column(db.String(120), nullable=True)
     corp_number = db.Column('사업자 등록번호', db.String(20), nullable=True)
-    corp_image = db.Column('사업자 등록증', db.String(200), nullable=True)
+    corp_image_path = db.Column('사업자 등록증', db.String(200), nullable=True)
     corp_address = db.Column(db.String(120), nullable=True)
     main_phonenumber = db.Column(db.String(20), nullable=True)
     main_cellphone = db.Column(db.String(20), nullable=True)

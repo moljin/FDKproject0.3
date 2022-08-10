@@ -10,20 +10,24 @@ def account_ownership_required(function):
     @wraps(function)
     def decorated_function(_id, *args, **kwargs):
         user = User.query.get_or_404(_id)
+        admin = User.query.filter_by(is_admin=True).first()
         if not current_user.is_authenticated:
             abort(404)
         else:
+            # if (user != current_user) and (admin != current_user):
             if user != current_user:
                 abort(404)
         return function(_id, *args, **kwargs)
     return decorated_function
 
 
-def created_obj_ownership(created_obj):
-    user = User.query.get_or_404(created_obj.user_id)
+def created_obj_ownership(obj):
+    user = User.query.get_or_404(obj.user_id)
+    admin = User.query.filter_by(is_admin=True).first()
     if not current_user.is_authenticated:
         abort(404)
     else:
+        # if (user != current_user) and (admin != current_user):
         if user != current_user:
             abort(404)
 

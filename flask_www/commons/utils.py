@@ -36,14 +36,14 @@ def filename_format(now, filename):
 
 
 def base_file_path(filename):
-    base_relative_path="static/media/user_images/{request_path}/{year}/{month}/{day}/{user_id}/{username}/{filename}".format(
+    base_relative_path="static/media/user_images/{request_path}/{year}/{month}/{day}/{user_id}/{username}/{random_word}/{filename}".format(
         request_path=request.path.split('/')[2],
         year=NOW.year,
         month=NOW.month,
         day=NOW.day,
         user_id=str(g.user.id),
         username=g.user.email.split('@')[0],
-        random_word=random_word(10),
+        random_word=random_word(20),
         filename=filename_format(NOW, filename),
     )
     return base_relative_path

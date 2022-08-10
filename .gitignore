@@ -5,7 +5,6 @@
 instance/*
 !instance/.gitignore
 .webassets-cache
-flask_www/configs/.env
 
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
@@ -168,6 +167,8 @@ cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/flask
 # 추가
+flask_www/configs/.env
 .idea/
 migrations/
 flask_www/static/media/
+flask_www/configs/path.py

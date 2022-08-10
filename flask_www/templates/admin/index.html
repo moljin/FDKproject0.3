@@ -1,0 +1,10 @@
+{% extends 'admin/master.html' %}
+
+{% block head_css %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='statics/css/admin/admin_2.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    여기에다 admin main page 구성하면 된다.
+{% endblock %}

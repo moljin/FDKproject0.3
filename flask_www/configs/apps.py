@@ -1,9 +1,18 @@
-from flask import g
+from flask import g, render_template
 from flask_login import current_user
 
 
 def related_app(app):
     from flask_www.configs import db
+
+    """ === Request hook === """
+    @app.errorhandler(404)
+    def page_404(error):
+        return render_template('errors/404.html'), 404
+
+    @app.errorhandler(401)
+    def page_401(error):
+        return render_template('errors/401.html'), 401
 
     @app.template_filter('daytime')
     def _format_datetime(value, _type=None):  # 템플릿단 얘시: what_date|daytime("full")

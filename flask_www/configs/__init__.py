@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_admin import Admin
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
@@ -8,13 +9,14 @@ from itsdangerous import URLSafeTimedSerializer
 
 from flask_www.configs.apps import related_app
 from flask_www.configs.config import TEMPLATE_ROOT, STATIC_ROOT, DevelopmentConfig, ProductionConfig
-from flask_www.configs.routes import routes_init
+from flask_www.configs.routes import routes_init, admin_views
 
 csrf = CSRFProtect()
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 mail = Mail()
+admin = Admin(name='β-0.3 Admin', template_mode='bootstrap4')
 
 
 def create_app(config_name=None):
@@ -44,6 +46,9 @@ def create_app(config_name=None):
         from flask_www.accounts.models import User
         user = User.query.get(int(pk_id))
         return user
+
+    admin.init_app(application)
+    admin_views(admin)
 
     routes_init(application)
     related_app(application)

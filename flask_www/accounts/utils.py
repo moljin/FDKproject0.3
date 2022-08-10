@@ -1,4 +1,4 @@
-from flask import url_for, render_template, flash, redirect, request, session
+from flask import url_for, render_template, flash, redirect, request, session, abort
 from flask_mail import Message
 from flask_login import current_user
 from functools import wraps
@@ -6,6 +6,18 @@ from functools import wraps
 from flask_www.accounts.models import User, Profile
 from flask_www.configs import mail
 from flask_www.configs.config import Config
+
+
+def admin_required(function):
+    @wraps(function)
+    def decorator_function(*args, **kwargs):
+        if current_user.is_authenticated:
+            if not current_user.is_admin:
+                abort(401)
+        else:
+            abort(401)
+        return function(*args, **kwargs)
+    return decorator_function
 
 
 def login_required(function):

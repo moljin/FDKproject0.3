@@ -9,7 +9,7 @@
         <div><a href="{{url_for('profiles.vendor_update', _id=profile.id)}}">{{ profile.nickname }} 수정</a></div>
     {% endif %}
 
-    <div>{{ profile.linked_image.split('/')[-1] }}</div>
+    <div>{{ profile.image_path.split('/')[-1] }}</div>
 
     {% if profile.level == '심사중 판매사업자' %}
         <div>{{ profile.level }}</div>
@@ -17,14 +17,14 @@
         <div>{{ profile.level }}</div>
     {% endif %}
 
-    <div><a href="{{ url_for('profiles.profile_delete', _id=profile.id) }}"><button>삭제</button></a></div>
+    <div><a href="{{ url_for('profiles.delete', _id=profile.id) }}"><button>삭제</button></a></div>
     <div><img width="300px" src="/{{ profile.image_path }}"></div>
 
     <div>{{ profile.message }}</div>
 
     <div>{{ profile.corp_email }}</div>
     <div>{{ profile.corp_number }}</div>
-    <div><img width="300px" src="/{{ profile.corp_image }}"></div>
+    <div><img width="300px" src="/{{ profile.corp_image_path }}"></div>
     <div>{{ profile.corp_address }}</div>
     <div>{{ profile.main_phonenumber }}</div>
     <div>{{ profile.main_cellphone }}</div>

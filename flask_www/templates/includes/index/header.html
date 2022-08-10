@@ -56,6 +56,11 @@
                         {% endif %}
                     </div>
                     <ul class="tab-panel" id="panel-my-page">
+                        {% if current_user.is_authenticated and current_user.is_admin %}
+                            <li>
+                                <a href="{{ url_for('admin.index') }}">Admin</a>
+                            </li>
+                        {% endif %}
                         {% if current_user.is_authenticated %}
                             <a href="{{ url_for('accounts.resetting', _id=current_user.id) }}">
                                 <li>
