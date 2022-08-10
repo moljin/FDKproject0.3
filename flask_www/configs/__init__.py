@@ -7,9 +7,10 @@ from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from itsdangerous import URLSafeTimedSerializer
 
+from flask_www.configs.admin import add_views
 from flask_www.configs.apps import related_app
 from flask_www.configs.config import TEMPLATE_ROOT, STATIC_ROOT, DevelopmentConfig, ProductionConfig
-from flask_www.configs.routes import routes_init, admin_views
+from flask_www.configs.routes import routes_init
 
 csrf = CSRFProtect()
 db = SQLAlchemy()
@@ -42,13 +43,13 @@ def create_app(config_name=None):
     mail.init_app(application)
 
     @login_manager.user_loader
-    def load_user(pk_id):
+    def load_user(_id):
         from flask_www.accounts.models import User
-        user = User.query.get(int(pk_id))
+        user = User.query.get(int(_id))
         return user
 
     admin.init_app(application)
-    admin_views(admin)
+    add_views(admin)
 
     routes_init(application)
     related_app(application)

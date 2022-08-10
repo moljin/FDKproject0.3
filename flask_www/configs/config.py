@@ -42,6 +42,10 @@ class Config(object):
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
 
+    """flask-admin"""
+    FLASK_ADMIN_SWATCH = 'cerulean'
+    FLASK_ADMIN_FLUID_LAYOUT = True
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
